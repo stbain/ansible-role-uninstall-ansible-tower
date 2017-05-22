@@ -35,7 +35,9 @@
         state: absent
       with_items:
         - /var/lib/awx
-        - /var/lib/rabbitmq
+        - /var/lib/rabbitmq 
         - /etc/rabbitmq
         - /etc/tower
 
+# TODO: Remove the repos that the installer installs
+# reason ---- uninstalling RabbitMQ server package from the bundled installer will prevent you from re-installing onto the node later
