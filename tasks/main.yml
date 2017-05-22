@@ -9,6 +9,7 @@
   tasks:
     - name: Shut down Tower
       command: ansible-tower-service stop
+      ignore_errors: yes
 
 - name: Remove node from the Tower cluster
   hosts: localhost
@@ -25,6 +26,7 @@
           - ansible-tower-server
           - ansible-tower
           - ansible-tower-ui
+          - rabbitmq-server
         state: absent
 
     - name: Remove Tower directories
