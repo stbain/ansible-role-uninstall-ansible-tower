@@ -1,2 +1,39 @@
 ---
 # tasks file for ansible-role-uninstall-ansible-tower/
+# This is just a copy of a file used to manually remove a node. The goal of this project is to...
+# TODO: Modify this to become the main task list for this role to remove a given node from
+#       an Ansible Tower cluster.
+#
+- name: Deprovision and clean up and Ansible Tower node
+  hosts: tower2.ans3.internal
+  tasks:
+    - name: Shut down Tower
+      command: ansible-tower-service stop
+
+- name: Remove node from the Tower cluster
+  hosts: localhost
+  tasks:
+    - name: Remove node from cluster
+      command: tower-manage deprovision_node --name=tower2.ans3.internal
+
+- name: Clean up Tower node
+  hosts: tower2.ans3.internal
+  tasks:
+    - name: Remove Tower packages
+      yum:
+        name:
+          - ansible-tower-server
+          - ansible-tower
+          - ansible-tower-ui
+        state: absent
+
+    - name: Remove Tower directories
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /var/lib/awx
+        - /var/lib/rabbitmq
+        - /etc/rabbitmq
+        - /etc/tower
+
